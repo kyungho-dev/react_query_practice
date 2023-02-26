@@ -20,13 +20,23 @@ export function Posts() {
   // const data = [];
 
   // useQuery는 몇가지 인자를 가지는데,
+
   // 우선 첫번째 인자는 'QueryKey' 이다.  // Query 이름을 말한다.
   // 아래 예시에서 QueryKey(즉, 쿼리 이름)는 "posts" 이다.
-  // 두번째 인자는 쿼리 함수이다. => 쿼리에 대한 데이터를 가져오는 방법에 대한 함수
+
+  // 두번째 인자는 "쿼리 함수" 이다. => 쿼리에 대한 데이터를 가져오는 방법에 대한 함수
   // 아래 예시에서는 "fetchPosts"라는 (위에 작성해놓은) 함수가 반환하는 데이터가
   // useQuery의 구조분해 할당으로 "data"에 할당이 된다.
 
-  const { data, isError, error, isLoading } = useQuery("posts", fetchPosts)
+  // 세번째 인자는 "옵션" 이다.
+
+  const { data, isError, error, isLoading } = useQuery("posts", fetchPosts, {
+    staleTime: 2000
+  });
+  // 세번째 인자는 옵션이고, staleTime은 밀리세컨드(ms) 기준이므로 2000이면 2초이다.
+  // 위처럼 설정하면 블로그 게시물이 2초마다 만료되도록 설정한것!
+
+
   // isError, isLoading 은 boolean
   // error는 쿼리 함수에서 전달하는 오류를 반환
 
