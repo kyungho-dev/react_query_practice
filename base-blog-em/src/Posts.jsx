@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useQuery } from 'react-query';
+
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
 
@@ -15,7 +17,18 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   // replace with useQuery
-  const data = [];
+  // const data = [];
+
+  // useQuery는 몇가지 인자를 가지는데,
+  // 우선 첫번째 인자는 'QueryKey' 이다.  // Query 이름을 말한다.
+  // 아래 예시에서 QueryKey(즉, 쿼리 이름)는 "posts" 이다.
+  // 두번째 인자는 쿼리 함수이다. => 쿼리에 대한 데이터를 가져오는 방법에 대한 함수
+  // 아래 예시에서는 "fetchPosts"라는 (위에 작성해놓은) 함수가 반환하는 데이터가
+  // useQuery의 구조분해 할당으로 "data"에 할당이 된다.
+
+  const {data} = useQuery("posts", fetchPosts)
+
+  if (!data) return <></>;
 
   return (
     <>
