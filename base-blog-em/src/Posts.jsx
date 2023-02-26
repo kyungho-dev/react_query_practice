@@ -26,9 +26,18 @@ export function Posts() {
   // 아래 예시에서는 "fetchPosts"라는 (위에 작성해놓은) 함수가 반환하는 데이터가
   // useQuery의 구조분해 할당으로 "data"에 할당이 된다.
 
-  const {data} = useQuery("posts", fetchPosts)
+  const { data, isError, error, isLoading } = useQuery("posts", fetchPosts)
+  // isError, isLoading 은 boolean
+  // error는 쿼리 함수에서 전달하는 오류를 반환
 
-  if (!data) return <></>;
+  if (isLoading) return <h3>Loading...</h3>;
+  // 시도 횟수를 변경 할 수 있지만, reactQuery는 기본적으로 3번의 시도를 하고 안될 경우 error를 뱉는다.
+  if (isError) return (
+    <>
+      <h3>Oops, something went wrong</h3>
+      <p>{error.toString()}</p>
+    </>
+  );
 
   return (
     <>
