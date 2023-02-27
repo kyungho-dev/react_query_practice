@@ -1,6 +1,6 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useQuery } from 'react-query';
+import {QueryClient, useQuery, useQueryClient} from 'react-query';
 
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
@@ -15,6 +15,18 @@ async function fetchPosts(pageNum) {
 export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
+
+  // 데이터 preFetching 을 위한 queryClient
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (currentPage < maxPostPage) {
+      const nextPage = currentPage + 1;
+      // prefetchQuery의 인수는 useQuery의 인수와 비슷하다.
+      // 첫번째 인자로 쿼리키를 받는데, React Query가 캐시에 이미 데이터가 있는지를 여기서 확인한다.
+      queryClient.prefetchQuery(["posts", nextPage], () => fetchPosts(nextPage));
+    }
+  }, [currentPage, QueryClient])
 
   // replace with useQuery
   // const data = [];
@@ -34,7 +46,8 @@ export function Posts() {
     ["posts", currentPage],
     () => fetchPosts(currentPage),
     {
-    staleTime: 2000
+    staleTime: 2000,
+    keepPreviousData: true  // 지난 데이터로 돌아갔을때, 캐시에 해당 데이터가 남아있도록 하는 옵션!!
   });
   // 세번째 인자는 옵션이고, staleTime은 밀리세컨드(ms) 기준이므로 2000이면 2초이다.
   // 위처럼 설정하면 블로그 게시물이 2초마다 만료되도록 설정한것!
