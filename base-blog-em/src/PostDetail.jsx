@@ -34,6 +34,9 @@ export function PostDetail({ post }) {
   // 함수에 인자를 넣을 수 있다. (useMutation((postId) => dele... 앞에 useMutation((이부분) =>
   const deleteMutation = useMutation((postId) => deletePost(postId));
 
+  // Chap.18 퀴즈
+  // update 로직
+  const updateMutation = useMutation((postId) => updatePost(postId))
 
   if (isLoading) return <h3>Now Loading...</h3>;
   if (isError) return (
@@ -56,7 +59,16 @@ export function PostDetail({ post }) {
       {
         deleteMutation.isSuccess && <p style={{color: 'green' }}>Post has (not) been delete :) </p>
       }
-      <button>Update title</button>
+      <button onClick={() => updateMutation.mutate(post.id)}>Update title</button>
+      {
+        updateMutation.isError && <p style={{color : 'red' }} > Update Error! </p>
+      }
+      {
+        updateMutation.isLoading && <p style={{color : 'purple' }} > Now Updating! </p>
+      }
+      {
+        updateMutation.isSuccess && <p style={{color : 'green' }} > Update Success! </p>
+      }
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map((comment) => (
