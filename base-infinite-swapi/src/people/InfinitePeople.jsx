@@ -29,7 +29,7 @@ export function InfinitePeople() {
   // 이 옵션은 lastPage를 가진 함수이고, allPage를 두번째 인자로 받을수 있지만, 잘 사용하지 않음
   // useInfiniteQuery의 세번째 인자인 hasNextPage는
   // (lastPage) => lastPage.next 의 반환값이 undefined인지에 따라 결정된다.
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetching, isError, error } = useInfiniteQuery(
     "sw-people",
     ({ pageParam = initialUrl }) => fetchUrl(pageParam),
     {
@@ -43,22 +43,30 @@ export function InfinitePeople() {
   // useInfiniteQuery에서 나온 fetchNextPage 함수값을 이용한다.
   // hasMore 프로퍼티는 hasNextPage라고 하는데, useInfiniteQuery에서 나온
   // 객체를 해체한 값을 이용한다.
-  return <>
-    <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
-      {data.pages.map((pageData) => {
-        return pageData.results.map((person) => {
-          return (
-            <Person
-              key={person.name}
-              name={person.name}
-              hairColor={person.hair_color}
-              eyeColor={person.eye_color}
-            />
-          )
-        })
-      })}
-    </InfiniteScroll>;
-  </>
+
+  if (isLoading) return <div className="loading">Loading...</div>
+  if (isError) return <div>Error! {error.toString()}</div>
+
+  return (
+    <>
+      {
+        isFetching && <div className="loading">Loading...</div>
+      }
+      <InfiniteScroll loadMore={fetchNextPage} hasMore={hasNextPage}>
+        {data.pages.map((pageData) => {
+          return pageData.results.map((person) => {
+            return (
+              <Person
+                key={person.name}
+                name={person.name}
+                hairColor={person.hair_color}
+                eyeColor={person.eye_color}
+              />
+            )
+          })
+        })}
+      </InfiniteScroll>
+    </>)
 
 
 }
