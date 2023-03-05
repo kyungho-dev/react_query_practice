@@ -12,6 +12,8 @@ async function getTreatments(): Promise<Treatment[]> {
 }
 
 export function useTreatments(): Treatment[] {
-  const { data } = useQuery(queryKeys.treatments, getTreatments);
+  const fallback = [];
+  // 빈 배열을 만들어 준 후, 아래처럼 해주면 data의 default 값이 fallback이 되는 것
+  const { data = fallback } = useQuery(queryKeys.treatments, getTreatments);
   return data;
 }
