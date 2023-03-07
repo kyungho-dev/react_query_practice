@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import type { Treatment } from '../../../../../shared/types';
 import { axiosInstance } from '../../../axiosInstance';
@@ -32,3 +32,19 @@ export function useTreatments(): Treatment[] {
   const { data = fallback } = useQuery(queryKeys.treatments, getTreatments);
   return data;
 }
+
+export function usePrefetchTreatments(): void {
+  // preFetch를 하는 것은
+  // 캐시를 채우는 것이 목적이기 때문에 void형태로.
+  // 아무것도 반환하지 않는다.
+  // React Query의 useQueryClient 훅을 사용한다.
+  // 그러면 query Provider 에서 프로퍼티로 사용한
+  // query Client가 반환된다.
+  // queryClient를 가져온 다음 prefetchQuery를 실행하면 되는데,
+  const queryClient = useQueryClient();
+  // prefetchQuery로 쿼리키를 사용(위에 사용한 useQuery의 키와 같은걸 사용)
+  // 여기에서 키는 캐시에서 어느 useQuery가 이 데이터를 찾아야 하는지 알려주므로
+  // 매우 중요하다
+  queryClient.prefetchQuery(queryKeys.treatments, getTreatments);
+}
+// 이렇게 만든 훅을 Home에서 사용할것
