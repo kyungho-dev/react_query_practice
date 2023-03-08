@@ -30,11 +30,17 @@ interface UseAppointments {
 // The purpose of this hook:
 //   1. track the current month/year (aka monthYear) selected by the user
 //     1a. provide a way to update state
+// -> 1. 현재 연도와 현재 월을 추적하고, 사용자가 선택한 달을 monthYear라고 한다.
 //   2. return the appointments for that particular monthYear
 //     2a. return in AppointmentDateMap format (appointment arrays indexed by day of month)
 //     2b. prefetch the appointments for adjacent monthYears
+//  -> 2. 선택한 monthYear에 해당하는 appointments 반환
+//  -> 2a. AppointmentDateMap 형식으로 반환
+//  -> 2b. 선택한 monthYear의 이전달과 다음달의 appointments를 prefetching 한다.
 //   3. track the state of the filter (all appointments / available appointments)
 //     3a. return the only the applicable appointments for the current monthYear
+//  -> 3. 필터의 상태를 추적 : 예약된 날짜를 포함해 모든 날짜를 표시하거나, 예약이 가능한 날짜만 보여주도록 필터링
+
 export function useAppointments(): UseAppointments {
   /** ****************** START 1: monthYear state *********************** */
   // get the monthYear for the current date (for default monthYear state)

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 // for storing current month / year details
 export interface MonthYear {
   startDate: dayjs.Dayjs; // first day of the month
-  firstDOW: number; // day of week; 0 === Sunday
+  firstDOW: number; // day of week; 0 === Sunday   // 1일의 요일을 알려주는것
   lastDate: number; // last date of the month
   monthName: string; // name of the month
   month: string; // two digit month number
