@@ -1,7 +1,7 @@
 // @ts-nocheck
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useQuery } from 'react-query';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { QueryClient, useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
 import { queryKeys } from '../../../react-query/constants';
@@ -70,7 +70,16 @@ export function useAppointments(): UseAppointments {
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
 
-  // TODO: update with useQuery!
+  // preFetch 구현하기
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const nextMonthYear = getNewMonthYear(monthYear, 1);
+    queryClient.prefetchQuery(
+      [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
+      () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+    );
+  }, [queryClient, monthYear]);
+
   // Notes:
   //    1. appointments is an AppointmentDateMap (object with days of month
   //       as properties, and arrays of appointments for that day as values)
