@@ -1,6 +1,12 @@
 // @ts-nocheck
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { QueryClient, useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
@@ -66,6 +72,11 @@ export function useAppointments(): UseAppointments {
   //   appointments that the logged-in user has reserved (in white)
   const { user } = useUser();
 
+  const selectFn = useCallback(
+    (data) => getAvailableAppointments(data, user),
+    [user],
+  );
+
   /** ****************** END 2: filter appointments  ******************** */
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
@@ -92,6 +103,15 @@ export function useAppointments(): UseAppointments {
   const { data: appointments = fallback } = useQuery(
     [queryKeys.appointments, monthYear.year, monthYear.month],
     () => getAppointments(monthYear.year, monthYear.month),
+    // useQuery의 선택자 실행
+    // select option은 함수
+    // showAll 이 true 일때는 모든 데이터를 반환
+    // false 일때는 selecteFn을 실행
+    // select 함수는 원래 반환되었을 데이터를 가져와서
+    // 변환한 다음 변환한 데이터를 반환한다.
+    {
+      select: showAll ? undefined : selectFn,
+    },
   );
 
   /** ****************** END 3: useQuery  ******************************* */
