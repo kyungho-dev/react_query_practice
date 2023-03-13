@@ -17,10 +17,17 @@ function queryErrorHandler(error: unknown): void {
 
 // to satisfy typescript until this file has uncommented contents
 // QueryClient()에 몇가지 옵션을 추가!
+// 여기에서 error 처리를 해주기 떄문에, 각각의 queryClient에서 에러 처리 해주지
+// 않아도 되는것! 즉, 전역 처리 해놓은것이다.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       onError: queryErrorHandler,
+      staleTime: 600000, // 10 minutes
+      cacheTime: 900000, // 15minutes
+      refetchOnMount: false, // staleTime과 cacheTime
+      refetchOnReconnect: false, // 그리고 여기 refetch 세가지 옵션들 설정해서
+      refetchOnWindowFocus: false, // 전역으로 refetch 관리하는것
     },
   },
 });
