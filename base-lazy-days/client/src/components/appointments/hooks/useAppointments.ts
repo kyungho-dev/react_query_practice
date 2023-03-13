@@ -132,6 +132,8 @@ export function useAppointments(): UseAppointments {
       refetchOnMount: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
       refetchOnReconnect: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
       refetchOnWindowFocus: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
+      // refetchInterval: 1000, // 매 초마다 리페칭// 실무에서는 절대 안됨!
+      refetchInterval: 60000, // 1분으로 하는게 더 맞겠지
     },
   );
 
