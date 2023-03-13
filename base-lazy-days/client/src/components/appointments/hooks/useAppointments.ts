@@ -16,6 +16,12 @@ import { AppointmentDateMap } from '../types';
 import { getAvailableAppointments } from '../utils';
 import { getMonthYearDetails, getNewMonthYear, MonthYear } from './monthYear';
 
+// useQuery와 prefetchQuery를 위한 공용 옵션
+const commonOptions = {
+  staleTime: 0, // 전역에는 600000(10분)으로 돼있는데 여기서 0으로 오버라이딩 해주는것 (리페칭이 필요한 데이터이므로)
+  cacheTime: 300000, // 5분
+};
+
 // for useQuery call
 async function getAppointments(
   year: string,
@@ -81,6 +87,12 @@ export function useAppointments(): UseAppointments {
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
 
+  // 얘를 훅 안에 선언해줘야 하는건 아니다.
+  // const commonOptions = {
+  //   staleTime: 0, // 전역에는 600000(10분)으로 돼있는데 여기서 0으로 오버라이딩 해주는것 (리페칭이 필요한 데이터이므로)
+  //   cacheTime: 300000, // 5분
+  // };
+
   // preFetch 구현하기
   const queryClient = useQueryClient();
   useEffect(() => {
@@ -88,6 +100,8 @@ export function useAppointments(): UseAppointments {
     queryClient.prefetchQuery(
       [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
       () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      commonOptions, // staleTime 과 cacheTime prefetch에 적용
+      // 의존성 배열에도 추가
     );
   }, [queryClient, monthYear]);
 
@@ -111,6 +125,13 @@ export function useAppointments(): UseAppointments {
     // 변환한 다음 변환한 데이터를 반환한다.
     {
       select: showAll ? undefined : selectFn,
+      ...commonOptions,
+      // staleTime: 0, // 전역에는 600000(10분)으로 돼있는데 여기서 0으로 오버라이딩 해주는것 (리페칭이 필요한 데이터이므로)
+      // cacheTime: 300000, // 5 minutes 그리고, 여기에 staleTime 과 cacheTime을 설정해주면
+      // prefetch에도 staleTime과 cacheTime이 적용되므로 해당 부분은 공통 옵션으로 분리
+      refetchOnMount: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
+      refetchOnReconnect: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
+      refetchOnWindowFocus: true, // 세 데이터를 모두 true로 해줌으로써 마운트, 리커넥트, 포커스 됐을때 모두 리페칭 일어나도록 설정
     },
   );
 

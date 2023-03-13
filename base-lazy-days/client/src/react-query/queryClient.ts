@@ -28,6 +28,9 @@ export const queryClient = new QueryClient({
       refetchOnMount: false, // staleTime과 cacheTime
       refetchOnReconnect: false, // 그리고 여기 refetch 세가지 옵션들 설정해서
       refetchOnWindowFocus: false, // 전역으로 refetch 관리하는것
+      // 위처럼 설정해주면 리페칭이 자주 일어나지 않을 것
+      // 그러므로, 이런 설정은 정보의 변동이 적거나
+      // 사용자 세션 동안 정보 변동이 거의 없는 데이터에 사용하기 좋다
     },
   },
 });
