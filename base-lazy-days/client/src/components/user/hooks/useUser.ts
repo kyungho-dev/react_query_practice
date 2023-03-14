@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import type { User } from '../../../../../shared/types';
 import { axiosInstance, getJWTHeader } from '../../../axiosInstance';
@@ -28,7 +28,8 @@ interface UseUser {
 }
 
 export function useUser(): UseUser {
-  // TODO: call useQuery to update user data from server
+  const queryClient = useQueryClient();
+
   // const user = null;
   // data: user 해줌으로써 data라는걸 구조분해할당받고 그걸 user라는 이름으로
   // rename 해준것
@@ -39,12 +40,16 @@ export function useUser(): UseUser {
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
-    // TODO: update the user in the query cache
+    // default 값을 설정해주기 위해 setQueryData 메서드 실행
+    // 설정하려는 쿼리키의 쿼리키를 인자로 준다
+    queryClient.setQueryData(queryKeys.user, newUser);
   }
 
   // meant to be called from useAuth
   function clearUser() {
-    // TODO: reset user to null in query cache
+    // 유저가 로그아웃 한 경우
+    // 마찬가지로 같은 쿼리 키값을 주지만, value를 null로 주는것
+    queryClient.setQueryData(queryKeys.user, null);
   }
 
   return { user, updateUser, clearUser };
