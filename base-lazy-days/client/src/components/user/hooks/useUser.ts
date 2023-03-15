@@ -37,6 +37,7 @@ export function useUser(): UseUser {
     queryKeys.user, // 첫번째 인수는 쿼리키,
     () => getUser(user), //  두번째 인수는 쿼리 함수
     {
+      initialData: getStoredUser, // 초기값(initialData를 함수로 할당)
       onSuccess: (received: User | null) => {
         // onSuccess는 쿼리 함수(여기서는 getUser가 쿼리 함수)나 setQueryData에서 데이터를 가져오는 함수이다.
         // received가 User인 경우는
