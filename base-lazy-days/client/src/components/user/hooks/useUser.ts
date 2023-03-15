@@ -36,6 +36,22 @@ export function useUser(): UseUser {
   const { data: user } = useQuery(
     queryKeys.user, // 첫번째 인수는 쿼리키,
     () => getUser(user), //  두번째 인수는 쿼리 함수
+    {
+      onSuccess: (received: User | null) => {
+        // onSuccess는 쿼리 함수(여기서는 getUser가 쿼리 함수)나 setQueryData에서 데이터를 가져오는 함수이다.
+        // received가 User인 경우는
+        // null 이면 사용자 스토리지에 있던 사용자 정보를 지우겠다는 뜻(clearUser 실행시)
+        if (!received) {
+          // received 가 falsy 하다면 clearStoredUser 함수를 실행
+          // user-storage에서 export 해준 함수
+          clearStoredUser();
+        } else {
+          // received 를 쿼리 함수 (여기서는 getUser)나 updateUser에서
+          // truthy 한 값을 받을 경우에는 해당 값을 로컬 스토리지로 저장
+          setStoredUser(received);
+        }
+      },
+    },
   );
 
   // meant to be called from useAuth
