@@ -32,5 +32,9 @@ export const queryClient = new QueryClient({
       // 그러므로, 이런 설정은 정보의 변동이 적거나
       // 사용자 세션 동안 정보 변동이 거의 없는 데이터에 사용하기 좋다
     },
+    mutations: {
+      onError: queryErrorHandler,
+
+    },
   },
 });
