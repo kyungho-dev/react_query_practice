@@ -67,6 +67,13 @@ export function useUser(): UseUser {
     // 유저가 로그아웃 한 경우
     // 마찬가지로 같은 쿼리 키값을 주지만, value를 null로 주는것
     queryClient.setQueryData(queryKeys.user, null);
+    // 사용자가 로그아웃 할 때 , useAuth에서 호출한 clearUser가
+    // 쿼리 데이터를 null로 설정해서 onSuccess를 트리거 할 뿐만 아니라, (여기서 onSuccess는 저 위에 useQuery의 onSuccess)
+    // clearStoredUser()를 통해 로컬 스토리지로부터 사용자를 지운다. 그리고 여기서 추가로 removeQueries를 실행
+    // 사용하는 인자는 하나인데, 쿼리키를 사용한다.
+    // 여기서는 useUserAppointments에서 사용했던
+    // 'user-appointments' 이다.
+    queryClient.removeQueries('user-appointments');
   }
 
   return { user, updateUser, clearUser };
