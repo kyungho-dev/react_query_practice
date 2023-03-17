@@ -34,7 +34,6 @@ export const queryClient = new QueryClient({
     },
     mutations: {
       onError: queryErrorHandler,
-
     },
   },
 });
