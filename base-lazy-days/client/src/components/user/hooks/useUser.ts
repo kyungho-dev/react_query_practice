@@ -73,7 +73,8 @@ export function useUser(): UseUser {
     // 사용하는 인자는 하나인데, 쿼리키를 사용한다.
     // 여기서는 useUserAppointments에서 사용했던
     // 'user-appointments' 이다.
-    queryClient.removeQueries('user-appointments');
+    // queryClient.removeQueries('user-appointments');
+    queryClient.removeQueries([queryKeys.appointments, queryKeys.user]);
   }
 
   return { user, updateUser, clearUser };

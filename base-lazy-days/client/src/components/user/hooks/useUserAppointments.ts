@@ -33,7 +33,7 @@ export function useUserAppointments(): Appointment[] {
   // 두번쨰 인자는 쿼리 함수인데, 쿼리 함수는 익명 함수를 사용한다.
   // 왜냐면 매개변수를 갖기 때문!
   const { data: userAppointments = fallback } = useQuery(
-    'user-appointments',
+    [queryKeys.appointments, queryKeys.user, user?.id],
     () => getUserAppointments(user),
     // user의 값이 참인지 거짓인지에 따라 실행 여부를 확인할
     // enabled 옵션 사용
