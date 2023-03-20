@@ -1,9 +1,9 @@
 import jsonpatch from 'fast-json-patch';
 import { UseMutateFunction, useMutation } from 'react-query';
-import { useCustomToast } from '../../app/hooks/useCustomToast';
 
 import type { User } from '../../../../../shared/types';
 import { axiosInstance, getJWTHeader } from '../../../axiosInstance';
+import { useCustomToast } from '../../app/hooks/useCustomToast';
 import { useUser } from './useUser';
 
 // for when we need a server function
