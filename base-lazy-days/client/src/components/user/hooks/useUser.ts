@@ -10,12 +10,16 @@ import {
   setStoredUser,
 } from '../../../user-storage';
 
-async function getUser(user: User | null): Promise<User | null> {
+async function getUser(
+  user: User | null,
+  signal: AbortSignal,
+): Promise<User | null> {
   if (!user) return null;
   const { data }: AxiosResponse<{ user: User }> = await axiosInstance.get(
     `/user/${user.id}`,
     {
       headers: getJWTHeader(user),
+      signal,
     },
   );
   return data.user;
@@ -35,7 +39,7 @@ export function useUser(): UseUser {
   // rename 해준것
   const { data: user } = useQuery(
     queryKeys.user, // 첫번째 인수는 쿼리키,
-    () => getUser(user), //  두번째 인수는 쿼리 함수
+    ({ signal }) => getUser(user, signal), //  두번째 인수는 쿼리 함수
     {
       initialData: getStoredUser, // 초기값(initialData를 함수로 할당)
       onSuccess: (received: User | null) => {
